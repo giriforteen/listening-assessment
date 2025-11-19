@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Listening Skills Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #0077b5 0%, #00a0dc 100%);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0077b5 0%, #00a0dc 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            font-size: 1em;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+        
+        .timer {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        
+        .content {
+            padding: 35px 30px;
+        }
+        
+        .progress-container {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .dot.completed {
+            background: #0077b5;
+            transform: scale(1.1);
+        }
+        
+        .progress-text {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .question-card {
+            background: #f8f9fa;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 12px;
+            border-left: 4px solid #0077b5;
+            transition: all 0.3s ease;
+        }
+        
+        .question-card.answered {
+            border-left: 4px solid #28a745;
+            background: #f0f9f4;
+        }
+        
+        .question-number {
+            color: #0077b5;
+            font-weight: 600;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .question-card p {
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+        
+        .rating-scale {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .rating-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .rating-option:hover {
+            border-color: #0077b5;
+            background: #f0f8ff;
+        }
+        
+        .rating-option input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: #0077b5;
+        }
+        
+        .rating-option label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 0.95em;
+            color: #555;
+        }
+        
+        .rating-option input[type="radio"]:checked + label {
+            color: #0077b5;
+            font-weight: 600;
+        }
+        
+        .results-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 40px 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .results-section.show {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .results-section h2 {
+            color: #333;
+            font-size: 1.6em;
+            margin-bottom: 25px;
+        }
+        
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: white;
+            margin: 0 auto 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 4px solid #0077b5;
+        }
+        
+        .score-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #0077b5;
+            line-height: 1;
+        }
+        
+        .score-total {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .profile-badge {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        .profile-badge h3 {
+            font-size: 1.3em;
+            margin-bottom: 12px;
+            color: #0077b5;
+        }
+        
+        .profile-badge p {
+            font-size: 1em;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .insight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 18px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .insight-box strong {
+            color: #856404;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .insight-box p {
+            font-size: 0.95em;
+            color: #856404;
+            margin: 0;
+        }
+        
+        .brand-tag {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px solid #e0e0e0;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .brand-tag strong {
+            color: #0077b5;
+        }
+        
+        .share-prompt {
+            background: linear-gradient(135deg, #0077b5 0%, #00a0dc 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+        }
+        
+        .share-prompt p {
+            margin: 0;
+            font-size: 0.95em;
+        }
+        
+        .share-text {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 0.9em;
+            font-style: italic;
+            line-height: 1.6;
+        }
+        
+        .incomplete-message {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .incomplete-message.show {
+            display: block;
+        }
+        
+        .incomplete-message p {
+            margin: 0;
+            color: #856404;
+            font-size: 0.95em;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .content {
+                padding: 25px 20px;
+            }
+            
+            .question-card {
+                padding: 20px;
+            }
+            
+            .score-circle {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .score-number {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>How Strong Are Your Active Listening Skills?</h1>
+            <p>A quick 5-question assessment for professionals</p>
+            <div class="timer">⏱️ Takes just 2 minutes</div>
+        </div>
+        
+        <div class="content">
+            <div class="progress-container">
+                <div class="progress-dots">
+                    <div class="dot" data-question="1"></div>
+                    <div class="dot" data-question="2"></div>
+                    <div class="dot" data-question="3"></div>
+                    <div class="dot" data-question="4"></div>
+                    <div class="dot" data-question="5"></div>
+                </div>
+                <div class="progress-text"><span id="answered">0</span> of 5 questions answered</div>
+            </div>
+            
+            <div id="questions">
+                <div class="question-card" data-question="1">
+                    <div class="question-number">Question 1 of 5</div>
+                    <p>I catch myself planning my response while others are still speaking</p>
+                    <div class="rating-scale">
+                        <div class="rating-option">
+                            <input type="radio" name="q1" value="5" id="q1-1">
+                            <label for="q1-1">Never</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q1" value="4" id="q1-2">
+                            <label for="q1-2">Rarely</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q1" value="3" id="q1-3">
+                            <label for="q1-3">Sometimes</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q1" value="2" id="q1-4">
+                            <label for="q1-4">Often</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q1" value="1" id="q1-5">
+                            <label for="q1-5">Always</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="2">
+                    <div class="question-number">Question 2 of 5</div>
+                    <p>I summarize what I've heard to confirm understanding</p>
+                    <div class="rating-scale">
+                        <div class="rating-option">
+                            <input type="radio" name="q2" value="1" id="q2-1">
+                            <label for="q2-1">Never</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q2" value="2" id="q2-2">
+                            <label for="q2-2">Rarely</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q2" value="3" id="q2-3">
+                            <label for="q2-3">Sometimes</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q2" value="4" id="q2-4">
+                            <label for="q2-4">Often</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q2" value="5" id="q2-5">
+                            <label for="q2-5">Always</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="3">
+                    <div class="question-number">Question 3 of 5</div>
+                    <p>I pick up on emotional undertones, not just words</p>
+                    <div class="rating-scale">
+                        <div class="rating-option">
+                            <input type="radio" name="q3" value="1" id="q3-1">
+                            <label for="q3-1">Never</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q3" value="2" id="q3-2">
+                            <label for="q3-2">Rarely</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q3" value="3" id="q3-3">
+                            <label for="q3-3">Sometimes</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q3" value="4" id="q3-4">
+                            <label for="q3-4">Often</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q3" value="5" id="q3-5">
+                            <label for="q3-5">Always</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="4">
+                    <div class="question-number">Question 4 of 5</div>
+                    <p>I eliminate distractions before important conversations</p>
+                    <div class="rating-scale">
+                        <div class="rating-option">
+                            <input type="radio" name="q4" value="1" id="q4-1">
+                            <label for="q4-1">Never</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q4" value="2" id="q4-2">
+                            <label for="q4-2">Rarely</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q4" value="3" id="q4-3">
+                            <label for="q4-3">Sometimes</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q4" value="4" id="q4-4">
+                            <label for="q4-4">Often</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q4" value="5" id="q4-5">
+                            <label for="q4-5">Always</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question-card" data-question="5">
+                    <div class="question-number">Question 5 of 5</div>
+                    <p>I notice when my assumptions color what I'm hearing</p>
+                    <div class="rating-scale">
+                        <div class="rating-option">
+                            <input type="radio" name="q5" value="5" id="q5-1">
+                            <label for="q5-1">Never</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q5" value="4" id="q5-2">
+                            <label for="q5-2">Rarely</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q5" value="3" id="q5-3">
+                            <label for="q5-3">Sometimes</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q5" value="2" id="q5-4">
+                            <label for="q5-4">Often</label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="q5" value="1" id="q5-5">
+                            <label for="q5-5">Always</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="incomplete-message" id="incompleteMessage">
+                <p><strong>📝 Almost there!</strong> Please answer all 5 questions to see your listening profile.</p>
+            </div>
+            
+            <div class="results-section" id="resultsSection">
+                <h2>Your Listening Profile</h2>
+                
+                <div class="score-circle">
+                    <div class="score-number" id="scoreNumber">0</div>
+                    <div class="score-total">out of 25</div>
+                </div>
+                
+                <div class="profile-badge" id="profileBadge">
+                    <h3 id="profileTitle"></h3>
+                    <p id="profileDescription"></p>
+                </div>
+                
+                <div class="insight-box" id="insightBox">
+                    <strong>💡 Key Insight</strong>
+                    <p id="insightText"></p>
+                </div>
+                
+                <div class="brand-tag">
+                    <p>Based on <strong>Forteen Consulting's</strong> Active Listening Micro-Learning Curriculum</p>
+                    <p style="margin-top: 8px; font-size: 0.85em;">© 2025 Forteen Consulting</p>
+                </div>
+                
+                <div class="share-prompt">
+                    <p><strong>💼 Share your results on LinkedIn</strong></p>
+                    <div class="share-text" id="shareText"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const totalQuestions = 5;
+        let answeredQuestions = new Set();
+        
+        const profiles = {
+            high: {
+                range: [21, 25],
+                title: "🌟 Strong Active Listener",
+                description: "You have excellent listening awareness and consistently apply good practices. Your challenge is maintaining this level under pressure and helping others develop similar skills.",
+                insight: "Strong listeners can become complacent. Continue challenging yourself to listen at deeper levels, especially with difficult stakeholders."
+            },
+            good: {
+                range: [16, 20],
+                title: "👍 Developing Active Listener",
+                description: "You demonstrate solid listening fundamentals with room to strengthen specific areas. You're aware when you're not listening well, which is powerful.",
+                insight: "Your biggest opportunity is building consistency. Focus on one listening technique each week until it becomes automatic."
+            },
+            growing: {
+                range: [11, 15],
+                title: "📈 Emerging Listener",
+                description: "You recognize that listening is challenging and are ready to develop stronger skills. Your awareness is the first step toward significant growth.",
+                insight: "Start with eliminating distractions. This single change will dramatically improve your listening effectiveness immediately."
+            },
+            developing: {
+                range: [5, 10],
+                title: "🚀 High-Potential Listener",
+                description: "You have tremendous opportunity for growth! Your honesty in this assessment shows readiness to transform your listening skills and professional impact.",
+                insight: "Focus first on paraphrasing. Simply repeating back what you heard will immediately improve understanding and build trust."
+            }
+        };
+        
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', updateProgress);
+        });
+        
+        function updateProgress() {
+            answeredQuestions.clear();
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected) {
+                    answeredQuestions.add(i);
+                    document.querySelector(`[data-question="${i}"]`).classList.add('answered');
+                    document.querySelector(`.dot[data-question="${i}"]`).classList.add('completed');
+                }
+            }
+            
+            document.getElementById('answered').textContent = answeredQuestions.size;
+            
+            if (answeredQuestions.size === totalQuestions) {
+                calculateResults();
+            } else {
+                document.getElementById('incompleteMessage').classList.add('show');
+                document.getElementById('resultsSection').classList.remove('show');
+            }
+        }
+        
+        function calculateResults() {
+            let totalScore = 0;
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected) {
+                    totalScore += parseInt(selected.value);
+                }
+            }
+            
+            document.getElementById('scoreNumber').textContent = totalScore;
+            
+            let selectedProfile;
+            for (const [key, profile] of Object.entries(profiles)) {
+                if (totalScore >= profile.range[0] && totalScore <= profile.range[1]) {
+                    selectedProfile = profile;
+                    break;
+                }
+            }
+            
+            document.getElementById('profileTitle').textContent = selectedProfile.title;
+            document.getElementById('profileDescription').textContent = selectedProfile.description;
+            document.getElementById('insightText').textContent = selectedProfile.insight;
+            
+            const shareText = `I just assessed my active listening skills and scored ${totalScore}/25! ${selectedProfile.title.replace(/[🌟👍📈🚀]/g, '').trim()}.\n\nActive listening is a game-changer for IT professionals working with clients. How are your listening skills?\n\n#ActiveListening #ProfessionalDevelopment #Communication`;
+            document.getElementById('shareText').textContent = shareText;
+            
+            document.getElementById('incompleteMessage').classList.remove('show');
+            document.getElementById('resultsSection').classList.add('show');
+            
+            setTimeout(() => {
+                document.getElementById('resultsSection').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }, 300);
+        }
+    </script>
+</body>
+</html>
